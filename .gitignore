@@ -1,0 +1,6 @@
+/ignore
+__pycache__
+*.tar
+*.tar.gz
+*.gz
+*.tgz
