@@ -39,6 +39,7 @@ if __name__ == "__main__":
     sleep_secs = 10
     limit = 500
     kill = 1
+    sound = 1
     priority = ['discord', '/code/code', 'brave/brave', 'brave-beta', 'sublime_text']
 
     parser = argparse.ArgumentParser(description='Example: --showlog 1')
@@ -55,7 +56,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     showlog = args.showlog
-    sound = args.sound
+    if args.sound != None: sound = args.sound
 
     if args.licenese:
         f = open(os.path.dirname(os.path.abspath(__file__)) +'/COPYING.txt',"r")
@@ -76,7 +77,10 @@ if __name__ == "__main__":
         priority = args.priority
         priority = priority.split(',') #print(priority)
     if args.kill != None: kill = args.kill
-    #print(args.kill) print(kill) sys.exit()
+    #print(args.kill) print(kill)
+
+    #sys.exit()
+
     PAmodule.init()
 
     while True:
@@ -97,8 +101,10 @@ if __name__ == "__main__":
         if debug == 0:
             if(mb < 1000):
                 printp(chalk.yellow(mb))
-                #print("sync && echo 1 > /proc/sys/vm/drop_caches && sync && echo 2 > /proc/sys/vm/drop_caches sync && echo 3 > /proc/sys/vm/drop_caches")
-                #os.system('sync && sudo sh -c "echo 1 > /proc/sys/vm/drop_caches" && sync && sudo sh -c "echo 2 > /proc/sys/vm/drop_caches" && sync && sudo sh -c "echo 3 > /proc/sys/vm/drop_caches"')
+                if 'SUDO_UID' in os.environ: #print(os.environ)
+                    print("sync && echo 1 > /proc/sys/vm/drop_caches && sync && echo 2 > /proc/sys/vm/drop_caches && sync && echo 3 > /proc/sys/vm/drop_caches")
+                    os.system('sync && echo 1 > /proc/sys/vm/drop_caches && sync && echo 2 > /proc/sys/vm/drop_caches && sync && echo 3 > /proc/sys/vm/drop_caches')
+                    #os.system('sync && sudo sh -c "echo 1 > /proc/sys/vm/drop_caches" && sync && sudo sh -c "echo 2 > /proc/sys/vm/drop_caches" && sync && sudo sh -c "echo 3 > /proc/sys/vm/drop_caches"')
 
         if debug == 0:
             if(mb > limit):
