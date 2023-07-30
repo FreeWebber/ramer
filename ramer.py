@@ -68,11 +68,12 @@ class RAMer:
         #sys.exit()
         PAmodule.init()
 
+        dropcachesmodule.drop_caches()
         start = timer()
         while True:
 
             end = timer()
-            if end > 1800:
+            if(end - start) > 1800:
                 start = timer()
                 dropcachesmodule.drop_caches()
 
