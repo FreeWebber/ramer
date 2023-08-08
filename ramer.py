@@ -69,7 +69,8 @@ class RAMer:
         PAmodule.init()
 
         dropcachesmodule.drop_caches()
-        start = timer()
+        start = timer() #notifymodule.notify(self, 'Test', 123, 5000)
+
         while True:
 
             end = timer()
@@ -137,7 +138,7 @@ class RAMer:
                 if pname in pids.keys():
                     killed = 1
                     if self.kill: os.kill(pids[pname], signal.SIGTERM) #or signal.SIGKILL
-                    notifymodule.notify(self, 'Process killed', pname)
+                    notifymodule.notify(self, 'Process killed', pname, 5000)
                     printp('Killed: '+ pname)
                     if self.sound: os.system("play notification.mp3 > /dev/null 2>&1")
 
