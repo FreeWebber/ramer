@@ -50,9 +50,19 @@ class RAMer:
     showlog = 0
     sleep_secs = 10
     sound = 1
+    ft = False
 
     def __init__(self):
         self.run(self)
+
+    @staticmethod
+    def getinfo(self):
+        f = open("/proc/meminfo","r")
+        lines = f.readlines()
+        mb = lines[1].split(' ')
+        mb = int(int(mb[-2])/1024) # print(mb) sys.exit() #mb = 500
+        if self.showlog: printp('RAM left: '+ str(mb) +' Mb')
+        return mb
 
     @staticmethod
     def run(self):
@@ -68,7 +78,6 @@ class RAMer:
         #sys.exit()
         PAmodule.init()
 
-        dropcachesmodule.drop_caches()
         start = timer() #notifymodule.notify(self, 'Test', 123, 5000)
 
         while True:
@@ -80,11 +89,14 @@ class RAMer:
 
             count = count+1
             if count > 1000: count = 0
-            f = open("/proc/meminfo","r")
-            lines = f.readlines()
-            kb = lines[1].split(' ')
-            mb = int(int(kb[-2])/1024) # print(mb) sys.exit() #mb = 500
-            if self.showlog: printp('RAM left: '+ str(mb) +' Mb')
+            mb = self.getinfo(self)
+
+            if self.ft == False:
+                self.ft = True
+                dropcachesmodule.drop_caches()
+                mb = self.getinfo(self)
+            time.sleep(self.sleep_secs)
+
             #print(count % 2) if count % 30 == 0:
             if debug == 0:
                 if(mb < 2000):
@@ -141,8 +153,6 @@ class RAMer:
                     notifymodule.notify(self, 'Process killed', pname, 5000)
                     printp('Killed: '+ pname)
                     if self.sound: os.system("play notification.mp3 > /dev/null 2>&1")
-
-            time.sleep(self.sleep_secs)
 
 if __name__ == "__main__":
     ramer = RAMer()

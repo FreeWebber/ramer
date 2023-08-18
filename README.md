@@ -11,6 +11,8 @@ For example, if list will be `discord,/code/code,brave/brave,brave-beta,sublime_
 
 pip3 install psutil
 
+if you want launch w/ sudo, you need install packages under root
+
 ### Launch w/ drop_caches
 
 sudo ./ramer.py
