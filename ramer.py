@@ -24,14 +24,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Image of app icon created by Freepik - Flaticon, https://www.flaticon.com/free-icons/ram
 '''
 
-import dbus
-from yachalk import chalk
+from yachalk import chalk # import dbus
 from os import scandir
 import os
-import signal
-import sys
+import signal # import sys
 import time
-from printPosition.printPosition import printPosition as printp
+from print_position import print_pos as printp #from printPosition.printPosition import printPosition as printp
 
 from pulseaudiomodule import PAmodule
 from notifymodule import notifymodule
@@ -50,9 +48,19 @@ class RAMer:
     showlog = 0
     sleep_secs = 10
     sound = 1
+    ft = False
 
     def __init__(self):
         self.run(self)
+
+    @staticmethod
+    def getinfo(self):
+        f = open("/proc/meminfo","r")
+        lines = f.readlines()
+        mb = lines[1].split(' ')
+        mb = int(int(mb[-2])/1024) # print(mb) sys.exit() #mb = 500
+        if self.showlog: printp('RAM left: '+ str(mb) +' Mb')
+        return mb
 
     @staticmethod
     def run(self):
@@ -68,23 +76,33 @@ class RAMer:
         #sys.exit()
         PAmodule.init()
 
-        dropcachesmodule.drop_caches()
         start = timer() #notifymodule.notify(self, 'Test', 123, 5000)
 
+        mb = self.getinfo(self)
+        printp(chalk.red(mb))
+
         while True:
+            printp(count)
 
             end = timer()
             if(end - start) > 1800:
                 start = timer()
+                printp('dropcachesmodule.drop_caches() #1')
                 dropcachesmodule.drop_caches()
 
             count = count+1
             if count > 1000: count = 0
-            f = open("/proc/meminfo","r")
-            lines = f.readlines()
-            kb = lines[1].split(' ')
-            mb = int(int(kb[-2])/1024) # print(mb) sys.exit() #mb = 500
-            if self.showlog: printp('RAM left: '+ str(mb) +' Mb')
+            mb = self.getinfo(self)
+
+            if self.ft == False:
+                self.ft = True
+                printp('dropcachesmodule.drop_caches() #2')
+                dropcachesmodule.drop_caches()
+                mb = self.getinfo(self)
+            printp(self.sleep_secs)
+            time.sleep(self.sleep_secs)
+            printp(self.sleep_secs)
+
             #print(count % 2) if count % 30 == 0:
             if debug == 0:
                 if(mb < 2000):
@@ -141,8 +159,6 @@ class RAMer:
                     notifymodule.notify(self, 'Process killed', pname, 5000)
                     printp('Killed: '+ pname)
                     if self.sound: os.system("play notification.mp3 > /dev/null 2>&1")
-
-            time.sleep(self.sleep_secs)
 
 if __name__ == "__main__":
     ramer = RAMer()

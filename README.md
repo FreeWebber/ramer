@@ -9,7 +9,10 @@ For example, if list will be `discord,/code/code,brave/brave,brave-beta,sublime_
 
 ### Dependencies install for Ubuntu 22.04
 
+pip3 install print-position
 pip3 install psutil
+
+if you want launch w/ sudo, you need install packages under root
 
 ### Launch w/ drop_caches
 
